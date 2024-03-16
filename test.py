@@ -23,6 +23,7 @@ def display_file_diff(file_path_1, file_path_2):
     print(''.join(diff))
 
 def execute_command_in_directory(command, directory):
+    print(f'$ {command}')
     output = subprocess.run(command, shell=True, cwd=directory, capture_output=True, text=True)
     return output
 
@@ -52,6 +53,9 @@ if __name__ == '__main__':
     execute_command_in_directory('make clean', root_dir)
     execute_command_in_directory('make', root_dir)
 
+    passed = 0
+    total = 0
+
     for i in arr:
         is_priority = arr[i].startswith("Priority") or arr[i].startswith("Deadlock")
         process1_path = os.path.abspath(f'{script_dir}/TestIn/process{i}1.list')
@@ -73,3 +77,7 @@ if __name__ == '__main__':
         
         if os.path.exists(log_file_path):
             os.remove(log_file_path)
+
+        total += 1
+    
+    print(f'{GREEN}{passed}/{total} tests passed{END}')
