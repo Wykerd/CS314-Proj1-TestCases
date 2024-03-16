@@ -1,18 +1,28 @@
-# TestSuiteALAN
+# CS314 Concurrency Project 1 Test Cases
 
-## Cloning
-1. `git clone https://github.com/jjvraw/TestSuiteProcMan.git` into directory/folder which holds your 314 folder.
-2. Navigate to directory `cd TestSuiteProcMan`
-3. Run a script `python3 test.py <filepath to proc_mngmnt>` - e.g. `python3 test.py ../12345678-rw314/tut4/proc_mngmnt` 
+Test Cases for Stellenbosch University's CS314 Concurrency Project 1
 
----
-TestCases: 
+## Usage
+
+Clone this repo onto your local machine and navigate to the directory
+
+```bash
+git clone https://github.com/Wykerd/CS314-Proj1-TestCases.git
+cd CS314-Proj1-TestCases
+```
+
+Run the script `python3 test.py <path to project root>` - e.g. `python3 test.py /path/to/12345678-rw314-projects/proj1`
+
+## Test Cases
+
 1. Priority Scheduler 1 - Given Test Case
 2. Priority Scheduler 2 - Multiple Processes Same Priority
 3. Priority Scheduler 3 - Duplicate Resource Names
 4. Priority Scheduler 4 - Long Boy
 5. FCFS 1 - Given Test Case
 6. FCFS 2 - Longer Test Case
-7. Deadlock 1 - Multiple Deadlocks
+7. Deadlock 1 (Priority Scheduler) - Multiple Deadlocks
+8. Priority Scheduler 5 - Longer Boy
+9. FCFS 3 - Longer Test Case
 8. Deadlock 2 (Priority Scheduler) - Two Proccesses Locked
----
+
