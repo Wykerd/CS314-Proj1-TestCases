@@ -1,6 +1,7 @@
 import sys
 import difflib
 import subprocess
+import os
 
 def compare_files(file_path_1, file_path_2):
     with open(file_path_1, 'r') as file_1, open(file_path_2, 'r') as file_2:
@@ -26,7 +27,12 @@ def execute_command_in_directory(command, directory):
     return output
 
 if __name__ == '__main__':
-    fp = sys.argv[1]
+    root_dir_raw = sys.argv[1]
+    script_dir = os.path.dirname(os.path.abspath(__file__))
+    root_dir = os.path.abspath(root_dir_raw)
+
+    print(f'Running tests in project root: {root_dir}')
+
     arr = {chr(i): chr(i) for i in range(ord('A'), ord('I')+1)}
     arr['A'] = "Priority Scheduler 1 - Given Test Case"
     arr['B'] = "Priority Scheduler 2 - Multiple Processes Same Priority"
@@ -43,17 +49,27 @@ if __name__ == '__main__':
     RED = '\033[91m'
     END = '\033[0m'
 
-    for i in arr:
-        execute_command_in_directory('make clean', fp)
-        execute_command_in_directory('make', fp)
-        if arr[i].startswith("Priority") == True or arr[i].startswith("Deadlock"):
-            execute_command_in_directory('./schedule_processes ../../../TestSuiteProcMan/TestIn/process' + i + '1.list ../../../TestSuiteProcMan/TestIn/process' + i + '2.list 0 2', fp)
-        else: 
-            execute_command_in_directory('./schedule_processes ../../../TestSuiteProcMan/TestIn/process' + i + '1.list ../../../TestSuiteProcMan/TestIn/process' + i + '2.list 2 2', fp)
+    execute_command_in_directory('make clean', root_dir)
+    execute_command_in_directory('make', root_dir)
 
-        if compare_files(fp + "scheduler.log", "TestOut/" + i+ ".log"): 
+    for i in arr:
+        is_priority = arr[i].startswith("Priority") or arr[i].startswith("Deadlock")
+        process1_path = os.path.abspath(f'{script_dir}/TestIn/process{i}1.list')
+        process2_path = os.path.abspath(f'{script_dir}/TestIn/process{i}2.list')
+        arg_3 = '0' if is_priority else '2'
+
+        execute_command_in_directory(f'./schedule_processes {process1_path} {process2_path} {arg_3} 2', root_dir)
+
+        log_file_path = os.path.abspath(f'{root_dir}/scheduler.log')
+        expected_log_file_path = os.path.abspath(f'{script_dir}/TestOut/{i}.log')
+
+        if compare_files(log_file_path, expected_log_file_path): 
             print(f'{GREEN}[PASSED]{END} {arr[i]}')    
+            passed += 1
         else: 
             print(f'{RED}[FAILED]{END} {arr[i]}')
             print(f'{RED}Differences:{END} \n')
-            display_file_diff(fp + "scheduler.log", "TestOut/A.log")
+            display_file_diff(log_file_path, expected_log_file_path)
+        
+        if os.path.exists(log_file_path):
+            os.remove(log_file_path)
