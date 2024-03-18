@@ -62,10 +62,15 @@ if __name__ == '__main__':
         process2_path = os.path.abspath(f'{script_dir}/TestIn/process{i}2.list')
         arg_3 = '0' if is_priority else '2'
 
-        execute_command_in_directory(f'./schedule_processes {process1_path} {process2_path} {arg_3} 2', root_dir)
+        execute_command_in_directory(f'./schedule_processes "{process1_path}" "{process2_path}" {arg_3} 2', root_dir)
 
         log_file_path = os.path.abspath(f'{root_dir}/scheduler.log')
         expected_log_file_path = os.path.abspath(f'{script_dir}/TestOut/{i}.log')
+
+        if os.path.exists(log_file_path) == False:
+            print(f'{RED}[FAILED]{END} {arr[i]}')
+            print('No log generated.')
+            continue
 
         if compare_files(log_file_path, expected_log_file_path): 
             print(f'{GREEN}[PASSED]{END} {arr[i]}')    
